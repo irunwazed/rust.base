@@ -1,1 +1,25 @@
 /target
+
+
+# Ignore Cargo's lock file (optional)
+Cargo.lock
+
+# Ignore files for IDEs
+.idea/
+.vscode/
+
+# Ignore OS-generated files
+.DS_Store
+Thumbs.db
+
+# Ignore .env files (optional, sensitive data)
+.env
+
+# Ignore rust-analyzer settings
+.rust-analyzer.json
+
+# Ignore generated documentation
+/doc/
+
+# Ignore log files
+*.log
