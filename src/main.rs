@@ -2,8 +2,10 @@ mod routers;
 mod utils;
 mod handlers;
 mod middlewares;
+mod dto;
+mod models;
 use routers::router::router;
-use utils::{autoload::init, common::get_env, db::load_db};
+use utils::{autoload::init, common::get_env, config::load_state};
 
 #[tokio::main]
 async fn main() {
@@ -11,7 +13,7 @@ async fn main() {
 
     init();
 
-    let pool = load_db().await;
+    let state = load_state().await;
 
     let port = get_env("APP_PORT", "8000")
     .parse::<u16>()
@@ -23,7 +25,7 @@ async fn main() {
         .await
         .expect("Failed to bind address");
 
-    axum::serve(listener, router(pool))
+    axum::serve(listener, router(state))
         .await
         .expect("Server crashed");
 }

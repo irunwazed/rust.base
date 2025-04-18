@@ -2,6 +2,7 @@ use axum::{
     body::Body,
     http::{Response, StatusCode},
 };
+use serde::Serialize;
 use serde_json::json;
 
 // pub fn response_error(message: impl Into<String>) -> Response<Body> {
@@ -40,12 +41,38 @@ pub fn response_bad_request(message: impl Into<String>) -> Response<Body> {
         .unwrap();
 }
 
-pub fn response_get_success(body: impl Into<String>) -> Response<Body> {
+pub fn response_get_success<T>(data: T) -> Response<Body>
+where
+    T: Serialize,
+{
+    let body = json!({
+        "status": true,
+        "message": "Berhasil mendapatkan data",
+        "data": data
+    });
+
     return Response::builder()
         .status(StatusCode::OK)
         .header("Content-Type", "application/json")
-        .body(Body::from(body.into()))
-        .unwrap();
+        .body(Body::from(serde_json::to_string(&body).unwrap()))
+        .unwrap()
+}
+
+pub fn response_get_fail<T>(data: T) -> Response<Body>
+where
+    T: Serialize,
+{
+    let body = json!({
+        "status": true,
+        "message": "Error load data",
+        "data": data
+    });
+
+    return Response::builder()
+        .status(StatusCode::INTERNAL_SERVER_ERROR)
+        .header("Content-Type", "application/json")
+        .body(Body::from(serde_json::to_string(&body).unwrap()))
+        .unwrap()
 }
 
 // pub fn response_post_success(body: impl Into<String>) -> Response<Body> {
