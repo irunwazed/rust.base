@@ -23,7 +23,7 @@ pub fn response_invalid(message: impl Into<String>) -> Response<Body> {
         "message": message.into()
     });
     return Response::builder()
-        .status(StatusCode::NOT_ACCEPTABLE)
+        .status(StatusCode::UNAUTHORIZED)
         .header("Content-Type", "application/json")
         .body(Body::from(body.to_string()))
         .unwrap();

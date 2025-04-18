@@ -1,12 +1,12 @@
 use crate::{
-    dto::pengguna::PenggunaStore,
-    models::pengguna::{pengguna_create, pengguna_update, pengguna_delete},
+    dto::{auth::Claims, pengguna::PenggunaStore},
+    models::pengguna::{pengguna_create, pengguna_delete, pengguna_update},
     utils::config::AppState,
 };
 use axum::{
     body::Body,
     extract::{Json, Path, State},
-    http::Response,
+    http::Response, Extension,
 };
 use serde_json::json;
 
@@ -14,11 +14,13 @@ use crate::models::pengguna::get_all;
 use crate::utils::responses::{response_bad_request, response_get_fail, response_get_success};
 
 
-pub async fn test_get(State(state): State<AppState>) -> Response<Body> {
+pub async fn test_get(State(state): State<AppState>, Extension(claims): Extension<Claims>) -> Response<Body> {
     let invalid_body = false;
     if invalid_body {
         return response_bad_request("Salah");
     }
+
+    println!("claims {:?}", claims.name);
 
     let users = get_all(state.db1).await;
     if users["status"] == true {
